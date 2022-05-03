@@ -4,9 +4,10 @@ export default async function handler(req, res) {
   //GET REQUEST
   if (req.method === 'GET') {
     //! Krijg een array met alle bestanden in de meegegeven map
-    const { resources } = await cloudinary.search.expression('folder:FOLDERNAAM-IN-DASHBOARD-NR4').sort_by('public_id', 'desc').max_results(30).execute();
-    const publicIds = resources.map((file) => file.public_id);
-    res.json(publicIds);
+    const { resources } = await cloudinary.search.expression('folder:test').sort_by('public_id', 'desc').max_results(30).execute();
+    console.log(resources);
+    const urls = resources.map((file) => file.secure_url);
+    res.json(urls);
   }
 
   // POST REQUEST
