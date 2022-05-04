@@ -1,10 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import axios from 'axios';
 import { useState } from 'react';
+import ProgressBar from '@ramonak/react-progress-bar';
 
 const Home = () => {
   const [imgData, setImgData] = useState(null);
   const [response, setResponse] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const selectImage = (e) => {
     const reader = new FileReader();
@@ -20,23 +23,41 @@ const Home = () => {
 
   const uploadImage = async (e) => {
     e.preventDefault();
+    setUploading(true);
+    // opties voor de upload met progress bar
+    const options = {
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        let percent = Math.floor((loaded * 100) / total);
+        console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+
+        if (percent < 100) {
+          setUploadPercentage(percent);
+        }
+      },
+    };
 
     // POST BASE64 naar de API
-    const { data } = await axios.post('/api/imageUpload', { data: imgData });
+    const { data } = await axios.post('/api/imageUpload', { data: imgData }, options);
 
     // Zet de url van de response in de state
     setResponse(data.secure_url);
 
     // Maak de geselecteerde state leeg om dubbele uploads te voorkomen
     setImgData(null);
+    setUploading(false);
+    setTimeout(() => {
+      setUploadPercentage(0);
+    }, 1000);
   };
 
   return (
     <div className='wrapper'>
       <form onSubmit={uploadImage}>
-        <input type='file' name='upload' id='upload' accept='image/png, image/jpeg, image/jpg' onChange={selectImage} />
-        <button>Upload</button>
+        <input type='file' name='upload' id='upload' accept='image/png, image/jpeg, image/jpg' onChange={selectImage} disabled={uploading} />
+        <button disabled={uploading}>Upload</button>
       </form>
+      <div>{uploadPercentage !== 0 && <ProgressBar completed={uploadPercentage} width='80%' margin='0 auto' />}</div>
       <div className='images'>
         {imgData && (
           <div>

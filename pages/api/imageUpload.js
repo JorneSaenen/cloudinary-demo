@@ -1,5 +1,8 @@
 import { cloudinary } from '../../cloudinary';
 
+// Hier kun je de api config wijzigen zoals de upload size limiet.
+export const config = { api: { bodyParser: { sizeLimit: '25mb' } } };
+
 export default async function handler(req, res) {
   //GET REQUEST
   if (req.method === 'GET') {

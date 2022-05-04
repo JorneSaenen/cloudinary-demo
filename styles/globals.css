@@ -35,9 +35,14 @@ button:hover {
   color: white;
 }
 
+button:disabled {
+  background-color: gray;
+  cursor: wait;
+}
+
 img {
   display: block;
-  max-height: 300px;
+  max-width: 400px;
 }
 
 .wrapper {
