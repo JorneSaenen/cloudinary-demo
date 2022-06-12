@@ -5,6 +5,3 @@
 
 ## Info voor map maken
 ![Info voor map maken!](./info/2.png)
-
-## Video voor het maken upload presets
-[![Info over upload presets](./info/cloudinary-logo.png)](https://youtu.be/db47aZcCRM4)
